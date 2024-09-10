@@ -1,7 +1,7 @@
 FROM ghcr.io/withercom/docker-laravel:main as npm
 WORKDIR /usr/src/app
 COPY . .
-RUN apk add nodejs npm
+RUN apk add nodejs npm php82-intl php82-zip
 RUN composer install --no-ansi --no-dev --no-interaction --no-plugins --no-progress --optimize-autoloader
 RUN npm install --no-package-lock && npm run build
 
