@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 node:19 as npm
+FROM --platform=linux/amd64 node:19 AS npm
 WORKDIR /usr/src/app
 COPY . .
 RUN npm install --no-package-lock && npm run build
