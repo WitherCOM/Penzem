@@ -1,4 +1,4 @@
-FROM ghcr.io/withercom/docker-laravel:main
+FROM ghcr.io/withercom/docker-laravel:main as npm
 WORKDIR /usr/src/app
 COPY . .
 RUN apk add nodejs npm
