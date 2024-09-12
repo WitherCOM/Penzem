@@ -13,4 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', \App\Livewire\CreateBudget::class);
+Route::middleware('auth.filament')
+    ->group(function() {
+        Route::get('/', \App\Livewire\CreateBudget::class);
+    });
+
