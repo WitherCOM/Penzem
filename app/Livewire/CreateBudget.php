@@ -80,8 +80,13 @@ class CreateBudget extends Component implements HasForms
                                 ->live()
                                 ->columns(3)
                                 ->schema([
-                                    TextInput::make('name')
-                                        ->required(),
+                                    Select::make('product')
+                                        ->relationship(titleAttribute: 'name')
+                                        ->createOptionForm([
+                                            TextInput::make('name')
+                                                ->required(),
+                                        ])
+                                        ->columnSpanFull(),
                                     TextInput::make('amount')
                                         ->required()
                                         ->numeric(),
@@ -101,12 +106,7 @@ class CreateBudget extends Component implements HasForms
                             ->schema([
                                 Hidden::make('scenario')
                                     ->dehydrateStateUsing(fn () => 1),
-                                Select::make('product')
-                                    ->relationship(titleAttribute: 'name')
-                                    ->createOptionForm([
-                                        TextInput::make('name')
-                                            ->required(),
-                                    ])
+                                Textarea::make('description')
                                     ->columnSpanFull(),
                                 TextInput::make('from_amount')
                                     ->required()
@@ -139,7 +139,7 @@ class CreateBudget extends Component implements HasForms
             case 0:
                 {
                     $budget = Budget::create([
-                        'name' => $state['name'],
+                        'description' => $state['description'],
                         'amount' => count($state['child_budgets']) > 0 ? 0 : $state['amount'],
                         'type' => Type::SPENDING,
                         'frequency' => Frequency::REGULAR,
@@ -152,7 +152,6 @@ class CreateBudget extends Component implements HasForms
                     {
                         Budget::create([
                             'parent_budget_id' => $budget->id,
-                            'name' => $child_budget['name'],
                             'amount' => $child_budget['amount'],
                             'type' => Type::SPENDING,
                             'frequency' => Frequency::REGULAR,
@@ -167,7 +166,7 @@ class CreateBudget extends Component implements HasForms
             case 1:
             {
                 Budget::create([
-                    'name' => $state['name'],
+                    'description' => $state['description'],
                     'amount' => $state['from_amount'],
                     'type' => Type::SPENDING,
                     'frequency' => Frequency::REGULAR,
@@ -176,7 +175,7 @@ class CreateBudget extends Component implements HasForms
                     'date' => $today
                 ]);
                 Budget::create([
-                    'name' => $state['name'],
+                    'description' => $state['description'],
                     'amount' => $state['to_amount'],
                     'type' => Type::INCOME,
                     'frequency' => Frequency::REGULAR,
