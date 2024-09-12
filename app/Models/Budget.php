@@ -26,6 +26,7 @@ class Budget extends Model
         'type',
         'parent_budget_id',
         'category_id',
+        'product_id',
         'frequency'
     ];
 
@@ -42,6 +43,11 @@ class Budget extends Model
     public function currency(): BelongsTo
     {
         return $this->belongsTo(Currency::class);
+    }
+
+    public function product(): BelongsTo
+    {
+        return $this->belongsTo(Product::class);
     }
 
     public function child_budgets(): HasMany

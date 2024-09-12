@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('budgets', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('name');
+            $table->string('description');
             $table->double('amount');
             $table->date('date');
             $table->enum('type',['INCOME', 'SPENDING', 'LOAN', 'OWE']); // ENUM
             $table->boolean('loan_owe_ok')->default(true);
             $table->foreignUuid('currency_id')->constrained('currencies')->cascadeOnDelete();
+            $table->foreignUuid('product_id')->nullable()->constrained('products')->nullOnDelete();
             $table->foreignUuid('parent_budget_id')->nullable()->constrained('budgets')->cascadeOnDelete();
             $table->foreignUuid('category_id')->nullable()->constrained('categories')->nullOnDelete();
             $table->enum('frequency',['REGULAR','UNIQUE','PERIODIC']);

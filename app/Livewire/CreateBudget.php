@@ -13,6 +13,7 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Tabs\Tab;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -47,12 +48,17 @@ class CreateBudget extends Component implements HasForms
                         ->schema([
                             Hidden::make('scenario')
                                 ->dehydrateStateUsing(fn () => 0),
-                            TextInput::make('name')
-                                ->columnSpanFull()
-                                ->required(),
+                            Select::make('product')
+                                ->relationship(titleAttribute: 'name')
+                                ->createOptionForm([
+                                    TextInput::make('name')
+                                        ->required(),
+                                ])
+                                ->columnSpanFull(),
+                            Textarea::make('description')
+                                ->columnSpanFull(),
                             TextInput::make('amount')
-                                ->required()
-                                ->default(0)
+                                ->required(fn(Get $get) => is_null($get('child_budgets')))
                                 ->disabled(fn(Get $get) => !is_null($get('child_budgets')))
                                 ->columnSpan(4)
                                 ->numeric(),
