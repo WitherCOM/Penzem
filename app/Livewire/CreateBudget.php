@@ -101,9 +101,13 @@ class CreateBudget extends Component implements HasForms
                             ->schema([
                                 Hidden::make('scenario')
                                     ->dehydrateStateUsing(fn () => 1),
-                                TextInput::make('name')
-                                    ->columnSpanFull()
-                                    ->required(),
+                                Select::make('product')
+                                    ->relationship(titleAttribute: 'name')
+                                    ->createOptionForm([
+                                        TextInput::make('name')
+                                            ->required(),
+                                    ])
+                                    ->columnSpanFull(),
                                 TextInput::make('from_amount')
                                     ->required()
                                     ->columnSpan(4)
@@ -140,6 +144,7 @@ class CreateBudget extends Component implements HasForms
                         'type' => Type::SPENDING,
                         'frequency' => Frequency::REGULAR,
                         'currency_id' => $state['currency'],
+                        'product_id' => $state['product'],
                         'category_id' => $state['category_id'],
                         'date' => $today
                     ]);
@@ -152,6 +157,7 @@ class CreateBudget extends Component implements HasForms
                             'type' => Type::SPENDING,
                             'frequency' => Frequency::REGULAR,
                             'currency_id' => $budget->currency_id,
+                            'product_id' => $child_budget['product'],
                             'category_id' => $child_budget['category_id'],
                             'date' => $today
                         ]);
