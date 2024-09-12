@@ -49,16 +49,17 @@ class CategoryResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\CategoriesRelationManager::class
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCategories::route('/'),
+            'index' => Pages\TreeCategories::route('/'),
             'create' => Pages\CreateCategory::route('/create'),
             'edit' => Pages\EditCategory::route('/{record}/edit'),
         ];
     }
+
 }

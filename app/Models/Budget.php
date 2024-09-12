@@ -19,7 +19,7 @@ class Budget extends Model
 
 
     protected $fillable = [
-        'name',
+        'description',
         'amount',
         'currency_id',
         'date',

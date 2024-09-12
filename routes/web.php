@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth.filament')
     ->group(function() {
-        Route::get('/', \App\Livewire\CreateBudget::class);
+        Route::get('/daily', \App\Livewire\CreateDailyBudget::class);
+        Route::get('/exchange', \App\Livewire\CreateExchange::class);
     });
 

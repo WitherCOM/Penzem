@@ -7,6 +7,13 @@
         "framework"
     ],
     "license": "MIT",
+    "repositories": [
+        {
+            "url": "https://github.com/WitherCOM/filament-tree.git",
+            "type": "vcs",
+            "no-api": true
+        }
+    ],
     "require": {
         "php": "^8.1",
         "filament/filament": "3.2",
@@ -14,7 +21,8 @@
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
-        "laravel/tinker": "^2.8"
+        "laravel/tinker": "^2.8",
+        "solution-forest/filament-tree": "2.x"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
@@ -67,6 +75,6 @@
             "php-http/discovery": true
         }
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "prefer-stable": true
 }
