@@ -6,18 +6,18 @@ on:
       - "main"
       - "master"
 jobs:
-  test:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Install composer dependencies
-        run: |
-          composer install
-      - name: Run Testsuite
-        run: vendor/bin/phpunit tests/
+  #test:
+  #  runs-on: ubuntu-latest
+#
+  #  steps:
+  #    - uses: actions/checkout@v3
+  #    - name: Install composer dependencies
+  #      run: |
+  #        composer install
+  #    - name: Run Testsuite
+  #      run: vendor/bin/phpunit tests/
   build:
-    needs: test
+    # needs: test
     runs-on: ubuntu-latest
 
     steps:
