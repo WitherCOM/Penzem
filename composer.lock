@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f5323c3bc8545e1eb00941b64b969057",
+    "content-hash": "cdaf7007f0014a5f577d8d8c91f3a2d1",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -4960,16 +4960,16 @@
         },
         {
             "name": "solution-forest/filament-tree",
-            "version": "2.x-dev",
+            "version": "v2.1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/WitherCOM/filament-tree.git",
-                "reference": "9f61d14f6acbb65f2980a7bdcd6da255d6c9dbd1"
+                "reference": "8800cd9386a288133138c64de1379f65d05a45f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WitherCOM/filament-tree/zipball/9f61d14f6acbb65f2980a7bdcd6da255d6c9dbd1",
-                "reference": "9f61d14f6acbb65f2980a7bdcd6da255d6c9dbd1",
+                "url": "https://api.github.com/repos/WitherCOM/filament-tree/zipball/8800cd9386a288133138c64de1379f65d05a45f3",
+                "reference": "8800cd9386a288133138c64de1379f65d05a45f3",
                 "shasum": ""
             },
             "require": {
@@ -4991,7 +4991,6 @@
                 "phpstan/phpstan-phpunit": "^1.0",
                 "spatie/laravel-ray": "^1.26"
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "laravel": {
@@ -5046,7 +5045,7 @@
                 "issues": "https://github.com/solution-forest/filament-tree/issues",
                 "source": "https://github.com/solution-forest/filament-tree"
             },
-            "time": "2024-09-12T19:53:21+00:00"
+            "time": "2024-09-13T06:58:15+00:00"
         },
         {
             "name": "spatie/color",
@@ -8719,16 +8718,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "10.5.33",
+            "version": "10.5.34",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "4def7a9cda75af9c2bc179ed53a8e41313e7f7cf"
+                "reference": "3c69d315bdf79080c8e115b69d1961c6905b0e18"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/4def7a9cda75af9c2bc179ed53a8e41313e7f7cf",
-                "reference": "4def7a9cda75af9c2bc179ed53a8e41313e7f7cf",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3c69d315bdf79080c8e115b69d1961c6905b0e18",
+                "reference": "3c69d315bdf79080c8e115b69d1961c6905b0e18",
                 "shasum": ""
             },
             "require": {
@@ -8800,7 +8799,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.33"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.34"
             },
             "funding": [
                 {
@@ -8816,7 +8815,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-09T06:06:56+00:00"
+            "time": "2024-09-13T05:19:38+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -10237,7 +10236,7 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
