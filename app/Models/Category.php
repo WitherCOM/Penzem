@@ -31,13 +31,13 @@ class Category extends Model
         return $this->hasMany(Budget::class);
     }
 
-    public function allBudgets(): Collection
+    public function allBudgets($date_from, $date_to): Collection
     {
         $budgets = collect([]);
-        $budgets = $budgets->merge($this->budgets);
+        $budgets = $budgets->merge($this->budgets()->whereBetween('date',[$date_from, $date_to])->get());
         foreach ($this->categories as $category)
         {
-            $budgets = $budgets->merge($category->allBudgets());
+            $budgets = $budgets->merge($category->allBudgets($date_from, $date_to));
         }
         return $budgets;
     }

@@ -36,13 +36,11 @@ class CreateDailyBudget extends Component implements HasForms
             ->model(Budget::class)
             ->columns(5)
             ->schema([
-                        Select::make('product')
+                        Select::make('category')
                             ->relationship(titleAttribute: 'name')
-                            ->createOptionForm([
-                                TextInput::make('name')
-                                    ->required(),
-                            ])
-                            ->columnSpanFull(),
+                            ->columnSpanFull()
+                            ->required()
+                            ->preload(),
                         Textarea::make('description')
                             ->columnSpanFull(),
                         DatePicker::make('date')
@@ -51,17 +49,19 @@ class CreateDailyBudget extends Component implements HasForms
                         TextInput::make('amount')
                             ->required(fn(Get $get) => is_null($get('child_budgets')))
                             ->disabled(fn(Get $get) => !is_null($get('child_budgets')))
-                            ->columnSpan(4)
+                            ->columnSpan(3)
                             ->numeric(),
+                        Select::make('product')
+                            ->relationship(titleAttribute: 'name')
+                            ->createOptionForm([
+                                TextInput::make('name')
+                                    ->required(),
+                            ])
+                            ->columnSpan(1),
                         Select::make('currency')
                             ->required()
                             ->columnSpan(1)
                             ->relationship(titleAttribute: 'name'),
-                        Select::make('category')
-                            ->relationship(titleAttribute: 'name')
-                            ->columnSpanFull()
-                            ->required()
-                            ->preload(),
                         Repeater::make('child_budgets')
                             ->columnSpanFull()
                             ->live()
