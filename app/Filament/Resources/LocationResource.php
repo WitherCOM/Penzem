@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\CurrencyResource\Pages;
-use App\Filament\Resources\CurrencyResource\RelationManagers;
-use App\Models\Currency;
+use App\Filament\Resources\LocationResource\Pages;
+use App\Filament\Resources\LocationResource\RelationManagers;
+use App\Models\Location;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,9 +13,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class CurrencyResource extends Resource
+class LocationResource extends Resource
 {
-    protected static ?string $model = Currency::class;
+    protected static ?string $model = Location::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -23,9 +23,7 @@ class CurrencyResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name'),
-                Forms\Components\TextInput::make('prefix'),
-                Forms\Components\TextInput::make('suffix'),
+                //
             ]);
     }
 
@@ -34,8 +32,7 @@ class CurrencyResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('prefix'),
-                Tables\Columns\TextColumn::make('suffix')
+                Tables\Columns\TextColumn::make('address')
             ])
             ->filters([
                 //
@@ -60,9 +57,9 @@ class CurrencyResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCurrencies::route('/'),
-            'create' => Pages\CreateCurrency::route('/create'),
-            'edit' => Pages\EditCurrency::route('/{record}/edit'),
+            'index' => Pages\ListLocations::route('/'),
+            'create' => Pages\CreateLocation::route('/create'),
+            'edit' => Pages\EditLocation::route('/{record}/edit'),
         ];
     }
 }

@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 use SolutionForest\FilamentTree\Concern\ModelTree;
 
 class Category extends Model
@@ -23,9 +26,20 @@ class Category extends Model
         'parent_category_id'
     ];
 
-    public function budgets(): BelongsToMany
+    public function budgets(): HasMany
     {
-        return $this->belongsToMany(Budget::class, 'budget_category');
+        return $this->hasMany(Budget::class);
+    }
+
+    public function allBudgets(): Collection
+    {
+        $budgets = collect([]);
+        $budgets = $budgets->merge($this->budgets);
+        foreach ($this->categories as $category)
+        {
+            $budgets = $budgets->merge($category->allBudgets());
+        }
+        return $budgets;
     }
 
     public function categories(): HasMany
@@ -41,6 +55,4 @@ class Category extends Model
     {
         return "parent_category_id";
     }
-
-
 }

@@ -27,12 +27,15 @@ class Budget extends Model
         'parent_budget_id',
         'category_id',
         'product_id',
-        'frequency'
+        'location_id',
+        'frequency',
+        'loan_owe_ok'
     ];
 
     protected $casts = [
         'frequency' => Frequency::class,
-        'type' => Type::class
+        'type' => Type::class,
+        'loan_owe_ok' => 'boolean'
     ];
 
     public function category(): BelongsTo
@@ -50,12 +53,17 @@ class Budget extends Model
         return $this->belongsTo(Product::class);
     }
 
+    public function location(): BelongsTo
+    {
+        return $this->belongsTo(Location::class);
+    }
+
     public function child_budgets(): HasMany
     {
         return $this->hasMany(Budget::class, 'parent_budget_id', 'id');
     }
 
-    public function amount(): Attribute
+    public function topAmount(): Attribute
     {
         return Attribute::get(function (){
             if ($this->child_budgets()->count() > 0)

@@ -15,11 +15,27 @@ class Currency extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'name'
+        'name',
+        'prefix',
+        'suffix'
     ];
 
     public function budgets(): HasMany
     {
         return $this->hasMany(Budget::class);
+    }
+
+    public function formatAmount($amount): string
+    {
+        $amount = strval($amount);
+        if (!is_null($this->prefix))
+        {
+            $amount = $this->prefix ." " . $amount;
+        }
+        if (!is_null($this->suffix))
+        {
+            $amount = $amount . " " . $this->suffix;
+        }
+        return $amount;
     }
 }

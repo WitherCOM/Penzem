@@ -7,4 +7,5 @@ enum Type: string
     case INCOME = 'INCOME';
     case SPENDING = 'SPENDING';
     case LOAN = 'LOAN';
+    case OWE = 'OWE';
 }

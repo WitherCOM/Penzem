@@ -67,20 +67,23 @@ class CreateDailyBudget extends Component implements HasForms
                             ->live()
                             ->columns(3)
                             ->schema([
-                                Select::make('product')
+                                Select::make('category')
                                     ->relationship(titleAttribute: 'name')
-                                    ->createOptionForm([
-                                        TextInput::make('name')
-                                            ->required(),
-                                    ])
+                                    ->searchable()
+                                    ->columnSpanFull()
+                                    ->preload(),
+                                Textarea::make('description')
                                     ->columnSpanFull(),
                                 TextInput::make('amount')
                                     ->required()
                                     ->numeric(),
-                                Select::make('category')
+                                Select::make('product')
                                     ->relationship(titleAttribute: 'name')
-                                    ->required()
-                                    ->preload(),
+                                    ->searchable()
+                                    ->createOptionForm([
+                                        TextInput::make('name')
+                                            ->required(),
+                                    ]),
                             ])
                     ])
             ->statePath('data');
@@ -103,13 +106,13 @@ class CreateDailyBudget extends Component implements HasForms
         {
             Budget::create([
                 'parent_budget_id' => $budget->id,
-                'description' => '',
+                'description' => $child_budget['description'],
                 'amount' => $child_budget['amount'],
                 'type' => Type::SPENDING,
                 'frequency' => Frequency::REGULAR,
                 'currency_id' => $budget->currency_id,
                 'product_id' => $child_budget['product'],
-                'category_id' => $child_budget['category'],
+                'category_id' => is_null($child_budget['category']) ? $budget->currency_id : $child_budget['category'],
                 'date' => $state['date']
             ]);
         }

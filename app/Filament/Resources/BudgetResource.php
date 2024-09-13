@@ -2,8 +2,12 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\Frequency;
+use App\Enums\Type;
 use App\Filament\Resources\BudgetResource\Pages;
+use App\Filament\Resources\BudgetResource\RelationManagers\ChildBudgetsRelationManager;
 use App\Models\Budget;
+use Faker\Provider\Text;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -22,15 +26,45 @@ class BudgetResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Forms\Components\Textarea::make('description'),
+                Forms\Components\TextInput::make('amount'),
+                Forms\Components\Select::make('currency')
+                    ->relationship(titleAttribute: 'name')
+                    ->searchable(),
+                Forms\Components\DatePicker::make('date'),
+                Forms\Components\Select::make('type')
+                    ->options(Type::class),
+                Forms\Components\Select::make('frequency')
+                    ->options(Frequency::class),
+                Forms\Components\Select::make('category')
+                    ->relationship(titleAttribute: 'name')
+                    ->searchable(),
+                Forms\Components\Select::make('product')
+                    ->relationship(titleAttribute: 'name')
+                    ->searchable(),
+                Forms\Components\Select::make('location')
+                    ->relationship(titleAttribute: 'name')
+                    ->searchable(),
+                Forms\Components\Checkbox::make('loan_owe_ok')
             ]);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->whereNull('parent_budget_id');
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('date'),
+                Tables\Columns\TextColumn::make('category.name'),
+                Tables\Columns\TextColumn::make('description'),
+                Tables\Columns\TextColumn::make('product.name'),
+                Tables\Columns\TextColumn::make('location.name'),
+                Tables\Columns\TextColumn::make('top_amount')
+                    ->formatStateUsing(fn (Budget $record, $state) => $record->currency->formatAmount($state))
             ])
             ->filters([
                 //
@@ -42,13 +76,14 @@ class BudgetResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->defaultSort('date', 'desc');
     }
 
     public static function getRelations(): array
     {
         return [
-            //
+            ChildBudgetsRelationManager::class
         ];
     }
 
