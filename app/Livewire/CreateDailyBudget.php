@@ -69,12 +69,12 @@ class CreateDailyBudget extends Component implements HasForms
                             ->schema([
                                 TextInput::make('amount')
                                     ->required()
-                                    ->columnSpan(4)
+                                    ->columnSpan(2)
                                     ->numeric(),
                                 Select::make('category')
                                     ->relationship(titleAttribute: 'name')
+                                    ->searchable()
                                     ->columnSpan(1)
-                                    ->required()
                                     ->preload(),
                                 Textarea::make('description')
                                     ->columnSpanFull(),
@@ -111,7 +111,6 @@ class CreateDailyBudget extends Component implements HasForms
                 'amount' => $child_budget['amount'],
                 'frequency' => Frequency::REGULAR,
                 'currency_id' => $budget->currency_id,
-                'product_id' => $child_budget['product'],
                 'location_id' => $child_budget['location'],
                 'category_id' => is_null($child_budget['category']) ? $budget->currency_id : $child_budget['category'],
                 'date' => $state['date']

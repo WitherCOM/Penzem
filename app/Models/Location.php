@@ -17,6 +17,13 @@ class Location extends Model
       'address'
     ];
 
+    protected static function boot()
+    {
+        static::creating(function(Location $location) {
+            $location->address = '';
+        });
+    }
+
     public function budgets(): HasMany
     {
         return $this->hasMany(Budget::class);
