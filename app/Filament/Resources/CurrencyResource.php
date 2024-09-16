@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Arr;
 
 class CurrencyResource extends Resource
 {
@@ -23,9 +24,12 @@ class CurrencyResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name'),
-                Forms\Components\TextInput::make('prefix'),
-                Forms\Components\TextInput::make('suffix'),
+                Forms\Components\Select::make('name')
+                    ->searchable()
+                    ->options(array_keys(config('money.currencies'))),
+                Forms\Components\TextInput::make('rate')
+                    ->required()
+                    ->numeric()
             ]);
     }
 
@@ -34,8 +38,7 @@ class CurrencyResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('prefix'),
-                Tables\Columns\TextColumn::make('suffix')
+                Tables\Columns\TextColumn::make('rate')
             ])
             ->filters([
                 //

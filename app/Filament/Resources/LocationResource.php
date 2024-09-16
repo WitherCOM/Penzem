@@ -23,7 +23,7 @@ class LocationResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Tables\Columns\TextColumn::make('name'),
             ]);
     }
 
@@ -32,7 +32,6 @@ class LocationResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('address')
             ])
             ->filters([
                 //

@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\BudgetResource\Widgets;
 
 use App\Filament\Resources\BudgetResource\Pages\ListBudgets;
-use App\Support\CurrencyConverter;
 use Filament\Widgets\Concerns\InteractsWithPageTable;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
@@ -22,7 +21,7 @@ class BudgetSumPrice extends BaseWidget
         $query = $this->getPageTableQuery()->newQuery();
         unset($query->getQuery()->wheres[0]);
         return [
-            Stat::make('Spending', $query->get()->sum(fn ($budget) => CurrencyConverter::convert('HUF', $budget->currency->name,$budget->amount)) . ' Ft')
+            Stat::make('Spending', $query->get()->sum(fn ($budget) => $budget->currency->convertTo($budget->amount, 'HUF')) . ' Ft')
         ];
     }
 }

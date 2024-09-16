@@ -26,8 +26,9 @@ class CategorySpending extends BaseWidget
             ->columns([
                 TextColumn::make('name'),
                 TextColumn::make('amount')
+                    ->currency('HUF')
                     ->getStateUsing(function(Category $record) {
-                        return $record->allBudgets($this->dateFilterData['date_from'], $this->dateFilterData['date_to'])->sum(fn ($budget) => CurrencyConverter::convert('HUF', $budget->currency->name,$budget->amount)) . ' Ft';
+                        return $record->allBudgets($this->dateFilterData['date_from'], $this->dateFilterData['date_to'])->sum(fn ($budget) => $budget->currency->convertTo($budget->amount, 'HUF'));
                     })
             ])
             ->filters(

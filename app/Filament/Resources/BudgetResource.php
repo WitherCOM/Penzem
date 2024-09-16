@@ -59,7 +59,7 @@ class BudgetResource extends Resource
                 Tables\Columns\TextColumn::make('description'),
                 Tables\Columns\TextColumn::make('location.name'),
                 Tables\Columns\TextColumn::make('top_amount')
-                    ->formatStateUsing(fn (Budget $record, $state) => $record->currency->formatAmount($state))
+                    ->currency(fn (Budget $record) => $record->currency->name)
             ])
             ->filters([
                 DateRangeFilter::make('date'),
@@ -77,6 +77,7 @@ class BudgetResource extends Resource
                             );
                     })
             ])
+            ->deferFilters()
             ->persistFiltersInSession()
             ->actions([
                 Tables\Actions\EditAction::make(),

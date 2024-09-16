@@ -16,8 +16,7 @@ class Currency extends Model
 
     protected $fillable = [
         'name',
-        'prefix',
-        'suffix'
+        'rate'
     ];
 
     public function budgets(): HasMany
@@ -25,17 +24,8 @@ class Currency extends Model
         return $this->hasMany(Budget::class);
     }
 
-    public function formatAmount($amount): string
+    public function convertTo($amount, $currency): int
     {
-        $amount = strval($amount);
-        if (!is_null($this->prefix))
-        {
-            $amount = $this->prefix ." " . $amount;
-        }
-        if (!is_null($this->suffix))
-        {
-            $amount = $amount . " " . $this->suffix;
-        }
-        return $amount;
+        return $amount * static::where('name', $currency)->first()->rate / $this->rate;
     }
 }

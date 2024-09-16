@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\BudgetResource\RelationManagers;
 
+use App\Models\Budget;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -29,8 +30,9 @@ class ChildBudgetsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('description')
             ->columns([
+                Tables\Columns\TextColumn::make('amount')
+                    ->currency(fn (Budget $record) => $record->currency->name, true),
                 Tables\Columns\TextColumn::make('category.name'),
-                Tables\Columns\TextColumn::make('product.name'),
                 Tables\Columns\TextColumn::make('description'),
             ])
             ->filters([
