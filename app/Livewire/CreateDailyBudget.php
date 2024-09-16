@@ -96,11 +96,11 @@ class CreateDailyBudget extends Component implements HasForms
         $budget = Budget::create([
             'description' => $state['description'],
             'amount' => count($state['child_budgets']) > 0 ? 0 : $state['amount'],
-            'type' => Type::SPENDING,
             'frequency' => Frequency::REGULAR,
             'currency_id' => $state['currency'],
             'product_id' => $state['product'],
             'category_id' => $state['category'],
+            'location_id' => $state['location'],
             'date' => $state['date']
         ]);
         foreach($state['child_budgets'] as $child_budget)
@@ -109,10 +109,10 @@ class CreateDailyBudget extends Component implements HasForms
                 'parent_budget_id' => $budget->id,
                 'description' => $child_budget['description'],
                 'amount' => $child_budget['amount'],
-                'type' => Type::SPENDING,
                 'frequency' => Frequency::REGULAR,
                 'currency_id' => $budget->currency_id,
                 'product_id' => $child_budget['product'],
+                'location_id' => $child_budget['location'],
                 'category_id' => is_null($child_budget['category']) ? $budget->currency_id : $child_budget['category'],
                 'date' => $state['date']
             ]);
