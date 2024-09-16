@@ -11,10 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('products', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->string('name');
-            $table->timestamps();
+        Schema::table('budgets', function (Blueprint $table) {
+            $table->dropColumn(['type','loan_owe_ok']);
         });
     }
 
@@ -23,6 +21,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('products');
+        Schema::table('budgets', function (Blueprint $table) {
+            $table->boolean('loan_owe_ok')->default(true);
+            $table->enum('type',['INCOME', 'SPENDING', 'LOAN', 'OWE']); // ENUM
+        });
     }
 };

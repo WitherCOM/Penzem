@@ -32,8 +32,6 @@ class BudgetResource extends Resource
                     ->relationship(titleAttribute: 'name')
                     ->searchable(),
                 Forms\Components\DatePicker::make('date'),
-                Forms\Components\Select::make('type')
-                    ->options(Type::class),
                 Forms\Components\Select::make('frequency')
                     ->options(Frequency::class),
                 Forms\Components\Select::make('category')

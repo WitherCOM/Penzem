@@ -19,7 +19,6 @@ return new class extends Migration
             $table->enum('type',['INCOME', 'SPENDING', 'LOAN', 'OWE']); // ENUM
             $table->boolean('loan_owe_ok')->default(true);
             $table->foreignUuid('currency_id')->constrained('currencies')->cascadeOnDelete();
-            $table->foreignUuid('product_id')->nullable()->constrained('products')->nullOnDelete();
             $table->foreignUuid('parent_budget_id')->nullable()->constrained('budgets')->cascadeOnDelete();
             $table->foreignUuid('category_id')->nullable()->constrained('categories')->nullOnDelete();
             $table->enum('frequency',['REGULAR','UNIQUE','PERIODIC']);

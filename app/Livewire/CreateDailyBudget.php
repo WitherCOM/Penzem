@@ -36,53 +36,54 @@ class CreateDailyBudget extends Component implements HasForms
             ->model(Budget::class)
             ->columns(5)
             ->schema([
-                        Select::make('category')
-                            ->relationship(titleAttribute: 'name')
-                            ->columnSpanFull()
-                            ->required()
-                            ->preload(),
                         Textarea::make('description')
                             ->columnSpanFull(),
                         DatePicker::make('date')
                             ->required()
                             ->columnSpanFull(),
+                        Select::make('location')
+                            ->relationship(titleAttribute: 'name')
+                            ->columnSpanFull()
+                            ->createOptionForm([
+                                TextInput::make('name')
+                                    ->required()
+                            ]),
                         TextInput::make('amount')
                             ->required(fn(Get $get) => is_null($get('child_budgets')))
                             ->disabled(fn(Get $get) => !is_null($get('child_budgets')))
                             ->columnSpan(3)
                             ->numeric(),
-                        Select::make('product')
-                            ->relationship(titleAttribute: 'name')
-                            ->createOptionForm([
-                                TextInput::make('name')
-                                    ->required(),
-                            ])
-                            ->columnSpan(1),
                         Select::make('currency')
                             ->required()
                             ->columnSpan(1)
                             ->relationship(titleAttribute: 'name'),
+                        Select::make('category')
+                            ->relationship(titleAttribute: 'name')
+                            ->columnSpan(1)
+                            ->required()
+                            ->preload(),
                         Repeater::make('child_budgets')
                             ->columnSpanFull()
                             ->live()
                             ->columns(3)
                             ->schema([
+                                TextInput::make('amount')
+                                    ->required()
+                                    ->columnSpan(4)
+                                    ->numeric(),
                                 Select::make('category')
                                     ->relationship(titleAttribute: 'name')
-                                    ->searchable()
-                                    ->columnSpanFull()
+                                    ->columnSpan(1)
+                                    ->required()
                                     ->preload(),
                                 Textarea::make('description')
                                     ->columnSpanFull(),
-                                TextInput::make('amount')
-                                    ->required()
-                                    ->numeric(),
-                                Select::make('product')
+                                Select::make('location')
                                     ->relationship(titleAttribute: 'name')
-                                    ->searchable()
+                                    ->columnSpanFull()
                                     ->createOptionForm([
                                         TextInput::make('name')
-                                            ->required(),
+                                            ->required()
                                     ]),
                             ])
                     ])
