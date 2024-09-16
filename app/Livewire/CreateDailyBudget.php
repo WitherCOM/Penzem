@@ -98,7 +98,6 @@ class CreateDailyBudget extends Component implements HasForms
             'amount' => count($state['child_budgets']) > 0 ? 0 : $state['amount'],
             'frequency' => Frequency::REGULAR,
             'currency_id' => $state['currency'],
-            'product_id' => $state['product'],
             'category_id' => $state['category'],
             'location_id' => $state['location'],
             'date' => $state['date']

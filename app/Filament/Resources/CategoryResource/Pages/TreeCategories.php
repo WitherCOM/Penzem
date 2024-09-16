@@ -13,7 +13,7 @@ class TreeCategories extends BasePage
 {
     protected static string $resource = CategoryResource::class;
 
-    protected static int $maxDepth = 2;
+    protected static int $maxDepth = 3;
 
     protected function getActions(): array
     {
