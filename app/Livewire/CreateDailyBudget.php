@@ -110,7 +110,7 @@ class CreateDailyBudget extends Component implements HasForms
                 'amount' => $child_budget['amount'],
                 'frequency' => Frequency::REGULAR,
                 'currency_id' => $budget->currency_id,
-                'location_id' => $child_budget['location'],
+                'location_id' => is_null($child_budget['location']) ? $budget->currency_id : $child_budget['location'],
                 'category_id' => is_null($child_budget['category']) ? $budget->currency_id : $child_budget['category'],
                 'date' => $state['date']
             ]);

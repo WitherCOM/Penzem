@@ -22,6 +22,7 @@
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
+        "malzariey/filament-daterangepicker-filter": "^3.0",
         "solution-forest/filament-tree": "2.1.0.*"
     },
     "require-dev": {

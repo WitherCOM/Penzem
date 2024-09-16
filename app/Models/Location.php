@@ -14,15 +14,9 @@ class Location extends Model
 
     protected $fillable = [
       'name',
-      'address'
+      'latitude',
+        'longitude'
     ];
-
-    protected static function booting()
-    {
-        static::creating(function(Location $location) {
-            $location->address = '';
-        });
-    }
 
     public function budgets(): HasMany
     {

@@ -22,7 +22,7 @@ class CategorySpending extends BaseWidget
     {
 
         return $table
-            ->query(Category::query())
+            ->query(Category::query()->whereNull('parent_category_id'))
             ->columns([
                 TextColumn::make('name'),
                 TextColumn::make('amount')

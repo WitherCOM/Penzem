@@ -23,7 +23,6 @@ class Budget extends Model
         'date',
         'parent_budget_id',
         'category_id',
-        'product_id',
         'location_id',
         'frequency'
     ];

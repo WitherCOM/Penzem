@@ -15,6 +15,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
 
 class BudgetResource extends Resource
 {
@@ -56,14 +57,27 @@ class BudgetResource extends Resource
                 Tables\Columns\TextColumn::make('date'),
                 Tables\Columns\TextColumn::make('category.name'),
                 Tables\Columns\TextColumn::make('description'),
-                Tables\Columns\TextColumn::make('product.name'),
                 Tables\Columns\TextColumn::make('location.name'),
                 Tables\Columns\TextColumn::make('top_amount')
                     ->formatStateUsing(fn (Budget $record, $state) => $record->currency->formatAmount($state))
             ])
             ->filters([
-                //
+                DateRangeFilter::make('date'),
+                Tables\Filters\Filter::make('description')
+                    ->form([
+                        Forms\Components\TextInput::make('search')
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['search'],
+                                fn (Builder $query, $date): Builder => $query
+                                    ->where('description', 'LIKE', "%{$data['search']}%")
+                                    ->orWhereRelation('child_budgets', 'description', 'LIKE', "%{$data['search']}%"),
+                            );
+                    })
             ])
+            ->persistFiltersInSession()
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
