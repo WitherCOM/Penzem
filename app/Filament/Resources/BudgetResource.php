@@ -37,9 +37,6 @@ class BudgetResource extends Resource
                 Forms\Components\Select::make('category')
                     ->relationship(titleAttribute: 'name')
                     ->searchable(),
-                Forms\Components\Select::make('product')
-                    ->relationship(titleAttribute: 'name')
-                    ->searchable(),
                 Forms\Components\Select::make('location')
                     ->relationship(titleAttribute: 'name')
                     ->searchable(),
