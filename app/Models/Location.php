@@ -17,7 +17,7 @@ class Location extends Model
       'address'
     ];
 
-    protected static function boot()
+    protected static function booting()
     {
         static::creating(function(Location $location) {
             $location->address = '';
