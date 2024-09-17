@@ -49,6 +49,16 @@ class TreeCategories extends BasePage
         return [];
     }
 
+    public function getTreeRecordTitle(?\Illuminate\Database\Eloquent\Model $record = null): string
+    {
+        if (! $record) {
+            return '';
+        }
+        $title = $record->{(method_exists($record, 'determineTitleColumnName') ? $record->determineTitleColumnName() : 'title')};
+        $money = $record->allBudgets(null, null)->sum(fn ($budget) => $budget->currency->convertTo($budget->amount, 'HUF'));
+        return "{$title} - {$money} Ft";
+    }
+
     // CUSTOMIZE ICON OF EACH RECORD, CAN DELETE
     // public function getTreeRecordIcon(?\Illuminate\Database\Eloquent\Model $record = null): ?string
     // {

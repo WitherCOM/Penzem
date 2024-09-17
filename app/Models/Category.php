@@ -26,15 +26,22 @@ class Category extends Model
         'parent_category_id'
     ];
 
-    public function budgets(): HasMany
+    public function budgets(): BelongsToMany
     {
-        return $this->hasMany(Budget::class);
+        return $this->belongsToMany(Budget::class,'category_budget');
     }
 
     public function allBudgets($date_from, $date_to): Collection
     {
         $budgets = collect([]);
-        $budgets = $budgets->merge($this->budgets()->whereBetween('date',[$date_from, $date_to])->get());
+        if (is_null($date_from) || is_null($date_to))
+        {
+            $budgets = $budgets->merge($this->budgets()->get());
+        }
+        else
+        {
+            $budgets = $budgets->merge($this->budgets()->whereBetween('date',[$date_from, $date_to])->get());
+        }
         foreach ($this->categories as $category)
         {
             $budgets = $budgets->merge($category->allBudgets($date_from, $date_to));
@@ -46,9 +53,21 @@ class Category extends Model
     {
         return $this->hasMany(Category::class, 'parent_category_id');
     }
+
     public function parent_category(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'parent_category_id');
+    }
+
+    public function getChildIds()
+    {
+        $childCategories = $this->categories;
+        $returnIds = $childCategories->pluck('id');
+        foreach($childCategories as $category)
+        {
+            $returnIds = $returnIds->merge($category->getChildIds());
+        }
+        return $returnIds;
     }
 
     public function determineParentColumnName(): string

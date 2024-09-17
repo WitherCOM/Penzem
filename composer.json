@@ -17,8 +17,9 @@
     "require": {
         "php": "^8.1",
         "ariaieboy/filament-currency": "^1.8",
-        "filament/filament": "3.2",
-        "filament/forms": "3.2",
+        "codewithdennis/filament-select-tree": "^3.1",
+        "filament/filament": "3.2.112",
+        "filament/forms": "3.2.112",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",

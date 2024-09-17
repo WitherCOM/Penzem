@@ -23,7 +23,7 @@ class LocationResource extends Resource
     {
         return $form
             ->schema([
-                Tables\Columns\TextColumn::make('name'),
+                Forms\Components\TextInput::make('name')
             ]);
     }
 
