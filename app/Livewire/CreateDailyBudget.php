@@ -102,7 +102,6 @@ class CreateDailyBudget extends Component implements HasForms
             'location_id' => $state['location'],
             'date' => $state['date']
         ]);
-        dd($budget);
         foreach($state['child_budgets'] as $child_budget)
         {
             Budget::create([
@@ -116,6 +115,6 @@ class CreateDailyBudget extends Component implements HasForms
                 'date' => $state['date']
             ]);
         }
-        redirect()->back();
+        $this->form->fill();
     }
 }
