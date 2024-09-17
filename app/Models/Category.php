@@ -74,4 +74,18 @@ class Category extends Model
     {
         return "parent_category_id";
     }
+
+    public static function calcRightCategories(array $categories): array
+    {
+        $categoryIds = collect([]);
+        foreach($categories as $category_id)
+        {
+            $categoryModel = Category::find($category_id);
+            if (collect($categories)->intersect($categoryModel->getChildIds())->count() == 0)
+            {
+                $categoryIds->push($category_id);
+            }
+        }
+        return $categoryIds->toArray();
+    }
 }

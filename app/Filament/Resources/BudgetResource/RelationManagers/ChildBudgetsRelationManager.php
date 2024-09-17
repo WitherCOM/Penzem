@@ -2,10 +2,12 @@
 
 namespace App\Filament\Resources\BudgetResource\RelationManagers;
 
+use App\Enums\Frequency;
 use App\Models\Budget;
 use App\Models\Category;
 use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Forms\Set;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -22,37 +24,29 @@ class ChildBudgetsRelationManager extends RelationManager
     {
         return $form
             ->schema([
+                Forms\Components\Textarea::make('description'),
+                Forms\Components\TextInput::make('amount'),
+                Select::make('currency_id')
+                    ->required()
+                    ->relationship('currency','name'),
+                Forms\Components\DatePicker::make('date')
+                    ->required(),
+                Forms\Components\Select::make('frequency')
+                    ->required()
+                    ->options(Frequency::class),
                 SelectTree::make('categories')
                     ->statePath('categories')
                     ->live()
                     ->relationship('categories','name','parent_category_id')
                     ->afterStateUpdated(function (array $state, Set $set) {
-                        $categoryIds = collect([]);
-                        foreach($state as $category_id)
-                        {
-                            $categoryModel = Category::find($category_id);
-                            $validId = true;
-                            foreach ($state as $category_id2)
-                            {
-                                if ($categoryModel->getChildIds()->contains($category_id2))
-                                {
-                                    $validId = false;
-                                    break;
-                                }
-                            }
-                            if ($validId)
-                            {
-                                $categoryIds->push($category_id);
-                            }
-                        }
-                        $set('categories',$categoryIds->toArray());
+                        $set('categories',Category::calcRightCategories($state));
                     })
                     ->enableBranchNode()
                     ->searchable()
                     ->required(),
-                Forms\Components\TextInput::make('description')
-                    ->required()
-                    ->maxLength(255),
+                Forms\Components\Select::make('location')
+                    ->relationship(titleAttribute: 'name')
+                    ->searchable()
             ]);
     }
 

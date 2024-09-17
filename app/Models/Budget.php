@@ -64,4 +64,16 @@ class Budget extends Model
             }
         } );
     }
+
+    function checkCategory(): bool
+    {
+        $categories = $this->categories()->get();
+        $rightCategories = Category::calcRightCategories($categories->pluck('id')->toArray());
+        return $categories->intersect($rightCategories)->count() == 0;
+    }
+
+    function fixCategory()
+    {
+        $rightCategories = Category::calcRightCategories($this->categories()->pluck('id')->toArray());
+    }
 }

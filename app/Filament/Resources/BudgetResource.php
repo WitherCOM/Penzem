@@ -46,25 +46,7 @@ class BudgetResource extends Resource
                     ->live()
                     ->relationship('categories','name','parent_category_id')
                     ->afterStateUpdated(function (array $state, Set $set) {
-                        $categoryIds = collect([]);
-                        foreach($state as $category_id)
-                        {
-                            $categoryModel = Category::find($category_id);
-                            $validId = true;
-                            foreach ($state as $category_id2)
-                            {
-                                if ($categoryModel->getChildIds()->contains($category_id2))
-                                {
-                                    $validId = false;
-                                    break;
-                                }
-                            }
-                            if ($validId)
-                            {
-                                $categoryIds->push($category_id);
-                            }
-                        }
-                        $set('categories',$categoryIds->toArray());
+                        $set('categories',Category::calcRightCategories($state));
                     })
                     ->enableBranchNode()
                     ->searchable()
@@ -93,7 +75,7 @@ class BudgetResource extends Resource
                             $categoryNames = $categoryNames->merge($cBudget->categories()->pluck('name'));
                         }
 
-                        return $categoryNames;
+                        return $categoryNames->unique();
                     })
                     ->badge()
                     ->separator(','),
