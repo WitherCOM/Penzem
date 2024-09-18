@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\CategoryResource\Pages;
 
 use App\Filament\Resources\CategoryResource;
+use App\Models\Budget;
 use Filament\Pages\Actions\CreateAction;
 use SolutionForest\FilamentTree\Actions;
 use SolutionForest\FilamentTree\Concern;
@@ -18,7 +19,10 @@ class TreeCategories extends BasePage
     protected function getActions(): array
     {
         return [
-            $this->getCreateAction(),
+            $this->getCreateAction()
+                ->after(function () {
+                    Budget::all()->each(fn (Budget $budget) => $budget->fixCategory());
+                }),
             // SAMPLE CODE, CAN DELETE
             //\Filament\Pages\Actions\Action::make('sampleAction'),
         ];
@@ -26,7 +30,7 @@ class TreeCategories extends BasePage
 
     protected function hasDeleteAction(): bool
     {
-        return false;
+        return true;
     }
 
     protected function hasEditAction(): bool

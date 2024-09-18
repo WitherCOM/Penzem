@@ -69,11 +69,12 @@ class Budget extends Model
     {
         $categories = $this->categories()->get();
         $rightCategories = Category::calcRightCategories($categories->pluck('id')->toArray());
-        return $categories->intersect($rightCategories)->count() == 0;
+        return $categories->intersect($rightCategories)->count() == $categories->count();
     }
 
     function fixCategory()
     {
         $rightCategories = Category::calcRightCategories($this->categories()->pluck('id')->toArray());
+        $this->categories()->sync($rightCategories);
     }
 }
