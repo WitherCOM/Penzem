@@ -55,7 +55,7 @@ class BudgetResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->whereNull('parent_budget_id');
+        return parent::getEloquentQuery();
     }
 
     public static function table(Table $table): Table
