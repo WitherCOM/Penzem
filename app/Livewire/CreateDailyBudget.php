@@ -27,8 +27,7 @@ class CreateDailyBudget extends Component implements HasForms
     use HasUuids;
 
     public ?array $data = [
-        'description' => '',
-        'categories' => []
+        'budgets' => []
     ];
 
     public function render(): View
@@ -40,25 +39,28 @@ class CreateDailyBudget extends Component implements HasForms
     {
         return $form
             ->model(Budget::class)
-            ->columns(5)
             ->schema([
-                        Textarea::make('description')
-                            ->columnSpanFull(),
+                Repeater::make('budgets')
+                    ->minItems(1)
+                    ->defaultItems(1)
+                    ->schema([
+                        Textarea::make('description'),
                         DatePicker::make('date')
-                            ->required()
-                            ->columnSpanFull(),
+                            ->default(now())
+                            ->required(),
                         Select::make('location')
                             ->relationship(titleAttribute: 'name')
-                            ->columnSpanFull()
                             ->live()
                             ->createOptionForm([
                                 TextInput::make('name')
                                     ->required()
                             ]),
+                        Select::make('frequency')
+                            ->required()
+                            ->options(Frequency::class),
                         TextInput::make('amount')
                             ->required(fn(Get $get) => is_null($get('child_budgets')))
                             ->disabled(fn(Get $get) => !is_null($get('child_budgets')))
-                            ->columnSpan(3)
                             ->numeric(),
                         Select::make('currency')
                             ->required()
@@ -67,80 +69,30 @@ class CreateDailyBudget extends Component implements HasForms
                         SelectTree::make('categories')
                             ->statePath('categories')
                             ->live()
-                            ->relationship('categories','name','parent_category_id')
+                            ->relationship('categories', 'name', 'parent_category_id')
                             ->afterStateUpdated(function (array $state, Set $set) {
                                 $categoryIds = collect([]);
-                                foreach($state as $category_id)
-                                {
+                                foreach ($state as $category_id) {
                                     $categoryModel = Category::find($category_id);
                                     $validId = true;
-                                    foreach ($state as $category_id2)
-                                    {
-                                        if ($categoryModel->getChildIds()->contains($category_id2))
-                                        {
+                                    foreach ($state as $category_id2) {
+                                        if ($categoryModel->getChildIds()->contains($category_id2)) {
                                             $validId = false;
                                             break;
                                         }
                                     }
-                                    if ($validId)
-                                    {
+                                    if ($validId) {
                                         $categoryIds->push($category_id);
                                     }
                                 }
-                                $set('categories',$categoryIds->toArray());
+                                $set('categories', $categoryIds->toArray());
                             })
                             ->enableBranchNode()
                             ->searchable()
                             ->columnSpan(1)
                             ->required(),
-                        Repeater::make('child_budgets')
-                            ->columnSpanFull()
-                            ->live()
-                            ->columns(3)
-                            ->schema([
-                                TextInput::make('amount')
-                                    ->required()
-                                    ->columnSpan(2)
-                                    ->numeric(),
-                                SelectTree::make('categories')
-                                    ->statePath('categories')
-                                    ->live()
-                                    ->relationship('categories','name','parent_category_id')
-                                    ->afterStateUpdated(function (array $state, Set $set) {
-                                        $categoryIds = collect([]);
-                                        foreach($state as $category_id)
-                                        {
-                                            $categoryModel = Category::find($category_id);
-                                            $validId = true;
-                                            foreach ($state as $category_id2)
-                                            {
-                                                if ($categoryModel->getChildIds()->contains($category_id2))
-                                                {
-                                                    $validId = false;
-                                                    break;
-                                                }
-                                            }
-                                            if ($validId)
-                                            {
-                                                $categoryIds->push($category_id);
-                                            }
-                                        }
-                                        $set('categories',$categoryIds->toArray());
-                                    })
-                                    ->enableBranchNode()
-                                    ->searchable()
-                                    ->columnSpan(1),
-                                Textarea::make('description')
-                                    ->columnSpanFull(),
-                                Select::make('location')
-                                    ->relationship(titleAttribute: 'name')
-                                    ->columnSpanFull()
-                                    ->createOptionForm([
-                                        TextInput::make('name')
-                                            ->required()
-                                    ]),
-                            ])
-                    ])
+                    ]),
+            ])
             ->statePath('data');
     }
 
@@ -156,8 +108,7 @@ class CreateDailyBudget extends Component implements HasForms
             'date' => $state['date']
         ]);
         $budget->categories()->attach($state['categories']);
-        foreach($state['child_budgets'] as $child_budget)
-        {
+        foreach ($state['child_budgets'] as $child_budget) {
             $cBudget = Budget::create([
                 'parent_budget_id' => $budget->id,
                 'description' => $child_budget['description'],
@@ -167,8 +118,7 @@ class CreateDailyBudget extends Component implements HasForms
                 'location_id' => is_null($child_budget['location']) ? $budget->location_id : $child_budget['location'],
                 'date' => $state['date']
             ]);
-            if (is_null($child_budget['categories']))
-            {
+            if (is_null($child_budget['categories'])) {
                 $categories = $budget->categories()->pluck('id')->merge(collect($state['categories']))->unique();
                 $cBudget->categories()->attach($categories);
             }
