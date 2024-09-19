@@ -3,13 +3,10 @@
 namespace App\Filament\Resources;
 
 use App\Enums\Frequency;
-use App\Enums\Type;
 use App\Filament\Resources\BudgetResource\Pages;
-use App\Filament\Resources\BudgetResource\RelationManagers\ChildBudgetsRelationManager;
 use App\Models\Budget;
 use App\Models\Category;
 use CodeWithDennis\FilamentSelectTree\SelectTree;
-use Faker\Provider\Text;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
@@ -18,7 +15,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Malzariey\FilamentDaterangepickerFilter\Filters\DateRangeFilter;
 
 class BudgetResource extends Resource
@@ -68,15 +64,6 @@ class BudgetResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('date'),
                 Tables\Columns\TextColumn::make('categories.name')
-                    ->getStateUsing(function(Budget $budget) {
-                        $categoryNames = $budget->categories()->pluck('name');
-                        foreach($budget->child_budgets as $cBudget)
-                        {
-                            $categoryNames = $categoryNames->merge($cBudget->categories()->pluck('name'));
-                        }
-
-                        return $categoryNames->unique();
-                    })
                     ->badge()
                     ->separator(','),
                 Tables\Columns\TextColumn::make('description'),
@@ -113,9 +100,7 @@ class BudgetResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            ChildBudgetsRelationManager::class
-        ];
+        return [];
     }
 
     public static function getPages(): array

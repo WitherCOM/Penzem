@@ -18,6 +18,7 @@ use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Livewire\Component;
 
@@ -52,6 +53,10 @@ class CreateDailyBudget extends Component implements HasForms
                         TextInput::make('name')
                             ->required()
                     ]),
+                Select::make('frequency')
+                    ->required()
+                    ->default(Frequency::REGULAR)
+                    ->options(Frequency::class),
                 Select::make('currency')
                     ->required()
                     ->columnSpan(1)
@@ -59,15 +64,12 @@ class CreateDailyBudget extends Component implements HasForms
                 Repeater::make('budgets')
                     ->minItems(1)
                     ->defaultItems(1)
+                    ->columns(2)
                     ->schema([
-                        Textarea::make('description'),
-                        Select::make('frequency')
-                            ->required()
-                            ->default(Frequency::REGULAR)
-                            ->options(Frequency::class),
+                        TextInput::make('description')
+                        ->columnSpanFull(),
                         TextInput::make('amount')
-                            ->required(fn(Get $get) => is_null($get('child_budgets')))
-                            ->disabled(fn(Get $get) => !is_null($get('child_budgets')))
+                            ->required()
                             ->numeric(),
                         SelectTree::make('categories')
                             ->statePath('categories')
@@ -92,7 +94,6 @@ class CreateDailyBudget extends Component implements HasForms
                             })
                             ->enableBranchNode()
                             ->searchable()
-                            ->columnSpan(1)
                             ->required(),
                     ]),
             ])
@@ -102,29 +103,19 @@ class CreateDailyBudget extends Component implements HasForms
     public function create(): void
     {
         $state = $this->form->getState();
-        $budget = Budget::create([
-            'description' => $state['description'],
-            'amount' => count($state['child_budgets']) > 0 ? 0 : $state['amount'],
-            'frequency' => Frequency::REGULAR,
-            'currency_id' => $state['currency'],
-            'location_id' => $state['location'],
-            'date' => $state['date']
-        ]);
-        $budget->categories()->attach($state['categories']);
-        foreach ($state['child_budgets'] as $child_budget) {
-            $cBudget = Budget::create([
-                'parent_budget_id' => $budget->id,
-                'description' => $child_budget['description'],
-                'amount' => $child_budget['amount'],
-                'frequency' => Frequency::REGULAR,
-                'currency_id' => $budget->currency_id,
-                'location_id' => is_null($child_budget['location']) ? $budget->location_id : $child_budget['location'],
-                'date' => $state['date']
+        $origin = Str::uuid();
+
+        foreach ($state['budgets'] as $budget) {
+            $budget = Budget::create([
+                'description' => $budget['description'],
+                'amount' => $budget['amount'],
+                'currency_id' => $state['currency'],
+                'frequency' => $state['frequency'],
+                'location_id' => $state['location'],
+                'date' => $state['date'],
+                'origin' => $origin
             ]);
-            if (is_null($child_budget['categories'])) {
-                $categories = $budget->categories()->pluck('id')->merge(collect($state['categories']))->unique();
-                $cBudget->categories()->attach($categories);
-            }
+            $budget->categories()->attach($budget['categories']);
         }
         $this->form->fill();
     }
