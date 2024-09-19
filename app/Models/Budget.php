@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Budget extends Model
 {
@@ -22,7 +23,7 @@ class Budget extends Model
         'amount',
         'currency_id',
         'date',
-        'parent_budget_id',
+        'origin',
         'location_id',
         'frequency'
     ];
@@ -44,11 +45,6 @@ class Budget extends Model
     public function location(): BelongsTo
     {
         return $this->belongsTo(Location::class);
-    }
-
-    public function child_budgets(): HasMany
-    {
-        return $this->hasMany(Budget::class, 'parent_budget_id', 'id');
     }
 
     public function topAmount(): Attribute
@@ -76,5 +72,15 @@ class Budget extends Model
     {
         $rightCategories = Category::calcRightCategories($this->categories()->pluck('id')->toArray());
         $this->categories()->sync($rightCategories);
+    }
+
+    protected static function booting()
+    {
+        static::creating(function (Budget $budget) {
+            if (is_null($budget->origin))
+            {
+                $budget->origin = Str::uuid()->toString();
+            }
+        });
     }
 }

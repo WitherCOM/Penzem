@@ -26,13 +26,16 @@ class CreateDailyBudget extends Component implements HasForms
     use InteractsWithForms;
     use HasUuids;
 
-    public ?array $data = [
-        'budgets' => []
-    ];
+    public ?array $data = [];
 
     public function render(): View
     {
         return view('livewire.form-base');
+    }
+
+    public function mount(): void
+    {
+        $this->form->fill();
     }
 
     public function form(Form $form): Form
@@ -40,32 +43,32 @@ class CreateDailyBudget extends Component implements HasForms
         return $form
             ->model(Budget::class)
             ->schema([
+                DatePicker::make('date')
+                    ->default(now())
+                    ->required(),
+                Select::make('location')
+                    ->relationship(titleAttribute: 'name')
+                    ->createOptionForm([
+                        TextInput::make('name')
+                            ->required()
+                    ]),
+                Select::make('currency')
+                    ->required()
+                    ->columnSpan(1)
+                    ->relationship(titleAttribute: 'name'),
                 Repeater::make('budgets')
                     ->minItems(1)
                     ->defaultItems(1)
                     ->schema([
                         Textarea::make('description'),
-                        DatePicker::make('date')
-                            ->default(now())
-                            ->required(),
-                        Select::make('location')
-                            ->relationship(titleAttribute: 'name')
-                            ->live()
-                            ->createOptionForm([
-                                TextInput::make('name')
-                                    ->required()
-                            ]),
                         Select::make('frequency')
                             ->required()
+                            ->default(Frequency::REGULAR)
                             ->options(Frequency::class),
                         TextInput::make('amount')
                             ->required(fn(Get $get) => is_null($get('child_budgets')))
                             ->disabled(fn(Get $get) => !is_null($get('child_budgets')))
                             ->numeric(),
-                        Select::make('currency')
-                            ->required()
-                            ->columnSpan(1)
-                            ->relationship(titleAttribute: 'name'),
                         SelectTree::make('categories')
                             ->statePath('categories')
                             ->live()

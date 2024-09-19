@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('budgets',function (Blueprint $table) {
             $table->dropConstrainedForeignId('parent_budget_id');
+            $table->uuid('origin');
         });
     }
 
