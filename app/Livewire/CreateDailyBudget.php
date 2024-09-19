@@ -76,21 +76,7 @@ class CreateDailyBudget extends Component implements HasForms
                             ->live()
                             ->relationship('categories', 'name', 'parent_category_id')
                             ->afterStateUpdated(function (array $state, Set $set) {
-                                $categoryIds = collect([]);
-                                foreach ($state as $category_id) {
-                                    $categoryModel = Category::find($category_id);
-                                    $validId = true;
-                                    foreach ($state as $category_id2) {
-                                        if ($categoryModel->getChildIds()->contains($category_id2)) {
-                                            $validId = false;
-                                            break;
-                                        }
-                                    }
-                                    if ($validId) {
-                                        $categoryIds->push($category_id);
-                                    }
-                                }
-                                $set('categories', $categoryIds->toArray());
+                                $set('categories',Category::calcRightCategories($state));
                             })
                             ->enableBranchNode()
                             ->searchable()
@@ -106,7 +92,7 @@ class CreateDailyBudget extends Component implements HasForms
         $origin = Str::uuid();
 
         foreach ($state['budgets'] as $budget) {
-            $budget = Budget::create([
+            $budgetModel = Budget::create([
                 'description' => $budget['description'],
                 'amount' => $budget['amount'],
                 'currency_id' => $state['currency'],
@@ -115,7 +101,7 @@ class CreateDailyBudget extends Component implements HasForms
                 'date' => $state['date'],
                 'origin' => $origin
             ]);
-            $budget->categories()->attach($budget['categories']);
+            $budgetModel->categories()->attach($budget['categories']);
         }
         $this->form->fill();
     }
