@@ -47,20 +47,6 @@ class Budget extends Model
         return $this->belongsTo(Location::class);
     }
 
-    public function topAmount(): Attribute
-    {
-        return Attribute::get(function (){
-            if ($this->child_budgets()->count() > 0)
-            {
-                return $this->child_budgets->sum('amount');
-            }
-            else
-            {
-                return $this->getOriginal('amount');
-            }
-        } );
-    }
-
     function checkCategory(): bool
     {
         $categories = $this->categories()->get();

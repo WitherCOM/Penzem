@@ -68,7 +68,7 @@ class BudgetResource extends Resource
                     ->separator(','),
                 Tables\Columns\TextColumn::make('description'),
                 Tables\Columns\TextColumn::make('location.name'),
-                Tables\Columns\TextColumn::make('top_amount')
+                Tables\Columns\TextColumn::make('amount')
                     ->currency(fn (Budget $record) => $record->currency->name)
             ])
             ->filters([
