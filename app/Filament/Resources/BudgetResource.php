@@ -83,7 +83,6 @@ class BudgetResource extends Resource
                                 $data['search'],
                                 fn (Builder $query, $date): Builder => $query
                                     ->where('description', 'LIKE', "%{$data['search']}%")
-                                    ->orWhereRelation('child_budgets', 'description', 'LIKE', "%{$data['search']}%"),
                             );
                     })
             ])
