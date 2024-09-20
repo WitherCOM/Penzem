@@ -18,10 +18,8 @@ class BudgetSumPrice extends BaseWidget
 
     protected function getStats(): array
     {
-        $query = $this->getPageTableQuery()->newQuery();
-        unset($query->getQuery()->wheres[0]);
         return [
-            Stat::make('Spending', $query->get()->sum(fn ($budget) => $budget->currency->convertTo($budget->amount, 'HUF')) . ' Ft')
+            Stat::make('Spending', $this->getPageTableQuery()->get()->sum(fn ($budget) => $budget->currency->convertTo($budget->amount, 'HUF')) . ' Ft')
         ];
     }
 }
