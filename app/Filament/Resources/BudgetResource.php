@@ -53,11 +53,6 @@ class BudgetResource extends Resource
             ]);
     }
 
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery();
-    }
-
     public static function table(Table $table): Table
     {
         return $table
@@ -83,6 +78,22 @@ class BudgetResource extends Resource
                                 $data['search'],
                                 fn (Builder $query, $date): Builder => $query
                                     ->where('description', 'LIKE', "%{$data['search']}%")
+                            );
+                    }),
+                Tables\Filters\Filter::make('categories')
+                    ->form([
+                        SelectTree::make('values')
+                            ->label('Excluded categories')
+                            ->relationship('categories','name','parent_category_id')
+                            ->enableBranchNode()
+                            ->independent(false)
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['values'],
+                                fn (Builder $query, $date): Builder => $query->whereDoesntHave('categories',
+                                fn (Builder $query) => $query->whereIn('categories.id', $data['values']))
                             );
                     })
             ])

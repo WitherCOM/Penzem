@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\BudgetResource\Widgets;
 
+use App\Enums\Frequency;
 use App\Filament\Resources\BudgetResource\Pages\ListBudgets;
 use Filament\Widgets\Concerns\InteractsWithPageTable;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
@@ -19,7 +20,8 @@ class BudgetSumPrice extends BaseWidget
     protected function getStats(): array
     {
         return [
-            Stat::make('Spending', $this->getPageTableQuery()->get()->sum(fn ($budget) => $budget->currency->convertTo($budget->amount, 'HUF')) . ' Ft')
+            Stat::make('Spending', $this->getPageTableQuery()->get()->sum(fn ($budget) => $budget->currency->convertTo($budget->amount, 'HUF')) . ' Ft'),
+            Stat::make('Spending periodic', $this->getPageTableQuery()->where('frequency',Frequency::PERIODIC)->get()->sum(fn ($budget) => $budget->currency->convertTo($budget->amount, 'HUF')) . ' Ft')
         ];
     }
 }
