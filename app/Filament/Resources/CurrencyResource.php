@@ -26,10 +26,7 @@ class CurrencyResource extends Resource
             ->schema([
                 Forms\Components\Select::make('name')
                     ->searchable()
-                    ->options(collect(array_keys(config('money.currencies')))->map(fn($item) => [
-                        'key' => $item,
-                        'value' => $item
-                    ])),
+                    ->options(collect(array_keys(config('money.currencies')))->mapWithKeys(fn($item) => [$item => $item])),
                 Forms\Components\TextInput::make('rate')
                     ->required()
                     ->numeric()
