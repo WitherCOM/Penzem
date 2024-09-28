@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Akaunting\Money\Money;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -27,5 +28,10 @@ class Currency extends Model
     public function convertTo($amount, $currency): int
     {
         return $amount * static::where('name', $currency)->first()->rate / $this->rate;
+    }
+
+    public static function formatValue($value, $currency): string
+    {
+        return (new Money($value,new \Akaunting\Money\Currency($currency)))->format();
     }
 }
