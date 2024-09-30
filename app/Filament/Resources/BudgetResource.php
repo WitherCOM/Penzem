@@ -28,7 +28,9 @@ class BudgetResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Textarea::make('description'),
-                Forms\Components\TextInput::make('amount'),
+                Forms\Components\TextInput::make('amount')
+                    ->numeric()
+                    ->required(),
                 Select::make('currency_id')
                     ->required()
                     ->relationship('currency','name'),

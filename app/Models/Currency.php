@@ -27,7 +27,7 @@ class Currency extends Model
 
     public function convertTo($amount, $currency): int
     {
-        return $amount * static::where('name', $currency)->first()->rate / $this->rate;
+        return intval(doubleval($amount) / doubleval(static::where('name', $currency)->first()->rate) * doubleval($this->rate));
     }
 
     public static function formatValue($value, $currency): string

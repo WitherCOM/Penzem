@@ -3,7 +3,6 @@
 namespace App\Livewire;
 
 use App\Enums\Frequency;
-use App\Enums\Type;
 use App\Models\Budget;
 use App\Models\Category;
 use App\Models\Currency;
