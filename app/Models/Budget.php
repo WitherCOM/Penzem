@@ -56,7 +56,7 @@ class Budget extends Model
 
     function fixCategory()
     {
-        $rightCategories = Category::calcRightCategories($this->categories()->pluck('id')->toArray());
+        $rightCategories = Category::calcRightCategories($this->categories->pluck('id')->toArray());
         $this->categories()->sync($rightCategories);
     }
 
